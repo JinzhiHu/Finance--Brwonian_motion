@@ -1,4 +1,5 @@
-## Task 1.0: Calculate the mu and sigma of the real stock returns
+## Task 1.0: Calculate the realized stock price at time t
+##  Yt: the entire path of the stock price
 
 Data <- read.csv("Changyu.csv")
 
@@ -15,12 +16,17 @@ pu = 1 / 2 + 1 / 2 * mu / sigma * sqrt(dt)
 
 ## We generate a Brownian motion (Using cumsum)
 set.seed(123)
-W <- cumsum(c(0, rnorm(n, 0, dt)))
+Z <- rnorm(n, 0, dt)
+W <- cumsum(c(0, sqrt(dt) * Z))
 
 ## Brownian motion with drift mu and volatility sigma
-Xt <- mu * seq(from = 0, to = n * dt, by = dt) + sigma * W
+t <- seq(from = 0, to = n * dt, by = dt)
+Xt <- mu * t + sigma * W
 
 ## Geometric Brownian motion
 Y0 <- as.numeric(Data$Open[nrow(Data)]) ## We get the opening of the first 
                                         ##  trading day
 Yt <- Y0 * exp(Xt)
+
+## Task 2.0: Plot the path
+plot(t, Yt, type="l")
